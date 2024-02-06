@@ -340,11 +340,11 @@ write_context<Out>& write_context<Out>::marshal(mrb_value const& v, mrb_int limi
         }
 #endif
 
-        if(not mrb_nil_p(default_val)) { marshal(default_val, limit); }
+        if(!mrb_nil_p(default_val)) { marshal(default_val, limit); }
       } break;
 
       case MRB_TT_DATA: {
-        if(not mrb_obj_respond_to(M, cls, mrb_intern_lit(M, "_dump_data"))) {
+        if(!mrb_obj_respond_to(M, cls, mrb_intern_lit(M, "_dump_data"))) {
           mrb_raise(M, mrb_class_get(M, "TypeError"), "_dump_data isn't defined'");
         }
         klass('d', v, true).marshal(mrb_funcall(M, v, "_dump_data", 0), limit);
@@ -636,7 +636,7 @@ mrb_value read_context<In>::marshal() {
       for (mrb_int i = 0; i < member_count; ++i) {
         mrb_value src_sym = mrb_ary_ref(M, symbols, i);
         mrb_value dst_sym = mrb_ary_ref(M, struct_symbols, i);
-        if (not mrb_obj_eq(M, src_sym, dst_sym)) {
+        if (!mrb_obj_eq(M, src_sym, dst_sym)) {
           mrb_raisef(M, mrb_class_get(M, "TypeError"), "struct %S not compatible (:%S for :%S)",
                      mrb_symbol_value(cls_name), src_sym, dst_sym);
         }
@@ -665,8 +665,8 @@ mrb_value read_context<In>::marshal() {
       return mrb_nil_value();
   }
 
-  mrb_assert(not mrb_nil_p(ret));
-  mrb_assert(not mrb_nil_p(mrb_ary_ref(M, objects, id)));
+  mrb_assert(!mrb_nil_p(ret));
+  mrb_assert(!mrb_nil_p(mrb_ary_ref(M, objects, id)));
   return ret;
 }
 
