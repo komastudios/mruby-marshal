@@ -48,11 +48,11 @@ bool operator!=(mrb_value const& lhs, mrb_sym const sym) {
 }
 
 bool operator==(mrb_value const& lhs, mrb_value const& rhs) {
-  return mrb_cptr(lhs) == mrb_cptr(rhs) and mrb_type(lhs) == mrb_type(rhs);
+  return mrb_cptr(lhs) == mrb_cptr(rhs) && mrb_type(lhs) == mrb_type(rhs);
 }
 
 bool operator!=(mrb_value const& lhs, mrb_value const& rhs) {
-  return mrb_type(lhs) != mrb_type(rhs) or mrb_cptr(lhs) != mrb_cptr(rhs);
+  return mrb_type(lhs) != mrb_type(rhs) || mrb_cptr(lhs) != mrb_cptr(rhs);
 }
 
 namespace {
