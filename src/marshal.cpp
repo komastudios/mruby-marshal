@@ -1,4 +1,3 @@
-extern "C" {
 #include <mruby.h>
 #include <mruby/array.h>
 #include <mruby/class.h>
@@ -8,8 +7,16 @@ extern "C" {
 #include <mruby/value.h>
 #include <mruby/variable.h>
 #include <mruby/marshal.h>
-#include <mruby/internal.h>
-}
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+#  include <mruby/internal.h>
+#if defined(__cplusplus)
+}  /* extern "C" { */
+#endif
+
+#include <mruby/presym.h>
 
 #include <stdlib.h>
 #include <string.h>
