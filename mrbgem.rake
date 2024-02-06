@@ -3,7 +3,7 @@ MRuby::Gem::Specification.new('mruby-marshal') do |spec|
   spec.author = 'take-cheeze'
   spec.summary = 'Marhshal module for mruby'
 
-  add_dependency 'mruby-onig-regexp', github: 'mattn/mruby-onig-regexp'
+  add_dependency 'mruby-regexp-pcre', github: 'iij/mruby-regexp-pcre'
   add_dependency 'mruby-string-ext', core: 'mruby-string-ext'
   add_dependency 'mruby-struct', core: 'mruby-struct'
 
