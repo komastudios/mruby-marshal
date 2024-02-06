@@ -82,8 +82,8 @@ struct utility {
     struct RClass* ret = M->object_class;
 
     while(true) {
-      while((p < end and p[0] != ':') or
-            ((p + 1) < end and p[1] != ':')) ++p;
+      while((p < end && p[0] != ':') ||
+            ((p + 1) < end && p[1] != ':')) ++p;
 
       mrb_sym const cls = mrb_intern(M, begin, p - begin);
       if (!mrb_mod_cv_defined(M, ret, cls)) {
@@ -138,8 +138,8 @@ struct write_context : public utility {
 
   write_context& fixnum(mrb_int const v) {
     if(v == 0) { out_.byte(0); return *this; }
-    else if(0 < v and v < 123) { out_.byte(v + 5); return *this; }
-    else if(-124 < v and v < 0) { out_.byte((v - 5) & 0xff); return *this; }
+    else if(0 < v && v < 123) { out_.byte(v + 5); return *this; }
+    else if(-124 < v && v < 0) { out_.byte((v - 5) & 0xff); return *this; }
     else {
       char buf[sizeof(mrb_int) + 1];
       mrb_int x = v;
@@ -173,7 +173,7 @@ struct write_context : public utility {
   write_context& marshal(mrb_value const& v, mrb_int limit = -1);
 
   bool is_struct(mrb_value const& v) const {
-    return mrb_class_defined(M, "Struct") and mrb_obj_is_kind_of(M, v, mrb_class_get(M, "Struct"));
+    return mrb_class_defined(M, "Struct") && mrb_obj_is_kind_of(M, v, mrb_class_get(M, "Struct"));
   }
 
   write_context& link(int const l) {
@@ -268,7 +268,7 @@ write_context<Out>& write_context<Out>::marshal(mrb_value const& v, mrb_int limi
   mrb_value const iv_keys = mrb_obj_instance_variables(M, v);
   mrb_funcall(M, iv_keys, "sort!", 0);
 
-  if(mrb_type(v) != MRB_TT_OBJECT and cls != regexp_class and RARRAY_LEN(iv_keys) > 0) { tag('I'); }
+  if(mrb_type(v) != MRB_TT_OBJECT && cls != regexp_class && RARRAY_LEN(iv_keys) > 0) { tag('I'); }
 
   if(cls == regexp_class) {
     uclass(v, regexp_class).tag('/').string(mrb_funcall(M, v, "source", 0));
@@ -434,7 +434,7 @@ struct read_context : public utility {
 
     if(c == 0) return 0;
     else if(c > 0) {
-      if(4 < c and c < 128) { return c - 5; }
+      if(4 < c && c < 128) { return c - 5; }
       if(c > int(sizeof(mrb_int))) { number_too_big(); }
       mrb_int ret = 0;
       for(mrb_int i = 0; i < c; ++i) {
@@ -443,7 +443,7 @@ struct read_context : public utility {
       return ret;
     }
     else {
-      if(-129 < c and c < -4) { return c + 5; }
+      if(-129 < c && c < -4) { return c + 5; }
       mrb_int const len = -c;
       if(len > int(sizeof(mrb_int))) { number_too_big(); }
       mrb_int ret = ~0;
@@ -514,7 +514,7 @@ mrb_value read_context<In>::marshal() {
         mrb_int key_len;
         char const* sym = mrb_sym2name_len(M, key, &key_len);
 
-        if (key_len == 1 and sym[0] == 'E') {
+        if (key_len == 1 && sym[0] == 'E') {
           marshal(); // TODO: store ignored encoding
         } else {
           mrb_iv_set(M, ret, key, marshal());
@@ -526,7 +526,7 @@ mrb_value read_context<In>::marshal() {
 
     case '@': {// link
       mrb_int const id = fixnum();
-      if (id >= RARRAY_LEN(objects) or mrb_nil_p(RARRAY_PTR(objects)[id])) {
+      if (id >= RARRAY_LEN(objects) || mrb_nil_p(RARRAY_PTR(objects)[id])) {
         mrb_raisef(M, mrb_class_get(M, "ArgumentError"), "Invalid link ID: %S (table size: %S)",
                    mrb_fixnum_value(id), mrb_fixnum_value(RARRAY_LEN(objects)));
       }
